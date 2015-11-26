@@ -5,11 +5,14 @@ package es.uvigo.esei.dagss.controladores.farmacia;
 
 import es.uvigo.esei.dagss.controladores.autenticacion.AutenticacionControlador;
 import es.uvigo.esei.dagss.dominio.daos.FarmaciaDAO;
+import es.uvigo.esei.dagss.dominio.daos.PacienteDAO;
 import es.uvigo.esei.dagss.dominio.entidades.Farmacia;
+import es.uvigo.esei.dagss.dominio.entidades.Paciente;
 import es.uvigo.esei.dagss.dominio.entidades.TipoUsuario;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -26,13 +29,40 @@ public class FarmaciaControlador implements Serializable {
     private Farmacia farmaciaActual;
     private String nif;
     private String password;
+    
+    private Paciente pacienteActual;
+    private String numeroPaciente;
+
+    public String getNumeroPaciente() {
+        return numeroPaciente;
+    }
+
+    public void setNumeroPaciente(String numeroPaciente) {
+        this.numeroPaciente = numeroPaciente;
+    }
+
+    public Paciente getPacienteActual() {
+        return pacienteActual;
+    }
+
+    public void setPacienteActual(Paciente pacienteActual) {
+        this.pacienteActual = pacienteActual;
+    }
+    
 
     @Inject
     private AutenticacionControlador autenticacionControlador;
 
     @EJB
     private FarmaciaDAO farmaciaDAO;
+    
+    @EJB 
+    private PacienteDAO pacienteDAO;
 
+     @PostConstruct
+    public void inicializar() {
+        pacienteActual = new Paciente();
+    }
     /**
      * Creates a new instance of AdministradorControlador
      */
@@ -87,5 +117,15 @@ public class FarmaciaControlador implements Serializable {
             }
         }
         return destino;
+    }
+    
+    public String doBuscarPaciente() {
+       Paciente p = pacienteDAO.buscarPorTarjetaSanitaria(this.numeroPaciente);
+       this.setPacienteActual(p);
+       return "";
+    }
+    
+    public String doCancelarBuscarPaciente() {
+        return "";
     }
 }
