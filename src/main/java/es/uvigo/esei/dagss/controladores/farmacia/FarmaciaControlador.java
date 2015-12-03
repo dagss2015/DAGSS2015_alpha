@@ -5,13 +5,19 @@ package es.uvigo.esei.dagss.controladores.farmacia;
 
 import es.uvigo.esei.dagss.controladores.autenticacion.AutenticacionControlador;
 import es.uvigo.esei.dagss.dominio.daos.FarmaciaDAO;
+import es.uvigo.esei.dagss.dominio.daos.MedicoDAO;
 import es.uvigo.esei.dagss.dominio.daos.PacienteDAO;
+import es.uvigo.esei.dagss.dominio.daos.TratamientoDAO;
 import es.uvigo.esei.dagss.dominio.entidades.Farmacia;
 import es.uvigo.esei.dagss.dominio.entidades.Paciente;
 import es.uvigo.esei.dagss.dominio.entidades.TipoUsuario;
+import es.uvigo.esei.dagss.dominio.entidades.Tratamiento;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -58,7 +64,15 @@ public class FarmaciaControlador implements Serializable {
     
     @EJB 
     private PacienteDAO pacienteDAO;
+    
+    @EJB
+    private TratamientoDAO tratamientoDAO;
 
+    @EJB
+    private MedicoDAO medicoDAO;
+    
+    
+    
      @PostConstruct
     public void inicializar() {
         pacienteActual = new Paciente();
@@ -121,8 +135,26 @@ public class FarmaciaControlador implements Serializable {
     
     public String doBuscarPaciente() {
        Paciente p = pacienteDAO.buscarPorTarjetaSanitaria(this.numeroPaciente);
+       
+       
+       
+       
+       if (p == null) {
+           return "";
+       }
+       Calendar dateIni = new GregorianCalendar();
+       dateIni.set(2015, 12, 5);
+       
+       Calendar dateFin = new GregorianCalendar();
+       dateFin.set(2016, 11, 15);
+       
        this.setPacienteActual(p);
-       return "";
+    
+       //ToDo
+       this.tratamientoDAO.crear(new Tratamiento(pacienteActual,
+               medicoDAO.buscarPorDNI("11111111A"), "esto es a machete", 
+               dateIni.getTime(), dateFin.getTime()));
+       return "ver_paciente";
     }
     
     public String doCancelarBuscarPaciente() {

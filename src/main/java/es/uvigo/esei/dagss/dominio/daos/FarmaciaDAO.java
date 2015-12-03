@@ -21,4 +21,7 @@ public class FarmaciaDAO extends GenericoDAO<Farmacia> {
     }
 
     // Completar aqui
+    
+    
+    
 }

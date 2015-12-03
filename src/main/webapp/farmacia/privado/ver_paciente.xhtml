@@ -16,30 +16,33 @@
             </ui:define>
 
             <ui:define name="contenido">
-                
                 <h:panelGrid columns="2" columnClasses="2">
-                   <h:outputText value="ID" />
-                   <h:outputText value="#{farmaciaControlador.farmaciaActual.id}" />
-                   
-                     <h:outputText value="NIF" />
-                     <h:outputText value="#{farmaciaControlador.farmaciaActual.nif}" />
-                   
-                     
-                     <h:outputText value="Nombre" />
-                     <h:outputText value="#{farmaciaControlador.farmaciaActual.nombreFarmacia}" />
+                    <h:outputText value="Nombre" />
+                    <h:outputText value="#{farmaciaControlador.pacienteActual.nombre}" />            
+                    <h:outputText value="Apellidos" />
+                    <h:outputText value="#{farmaciaControlador.pacienteActual.apellidos}" />
+                    <h:outputText value="Nº Tarjeta Sanitaria" />
+                    <h:outputText value="#{farmaciaControlador.pacienteActual.numeroTarjetaSanitaria}" />  
+                    <h:outputText value="Nº Seguridad Social" />                
+                    <h:outputText value="#{farmaciaControlador.pacienteActual.numeroSeguridadSocial}" />
+                    <h:outputText value="Dni" />
+                    <h:outputText value="#{farmaciaControlador.pacienteActual.dni}" />
+                    <h:outputText value="Direccion" />
+                    <h:outputText value="#{farmaciaControlador.pacienteActual.direccion.domicilio}" />
+                    <h:outputText value="Telefono" />
+                    <h:outputText value="#{farmaciaControlador.pacienteActual.telefono}" />
+                    <h:outputText value="Email" />
+                    <h:outputText value="#{farmaciaControlador.pacienteActual.email}" />
+                    <h:outputText value="Medico" />
+                    <h:outputText value="#{farmaciaControlador.pacienteActual.medico.nombre}" />
                 </h:panelGrid>
-                
-                <h:form>
-                    
-                        <h:outputLabel value="Tarjeta paciente "/>
-                        <h:inputText id ="tarjeta" value="#{farmaciaControlador.numeroPaciente}" required="true"/>
-                        <h:message for="tarjeta"/>
-                    
 
-                    <h:commandButton  value="Guardar" action="#{farmaciaControlador.doBuscarPaciente}" />
-                </h:form>
-                
-            
+
+                <h:panelGrid columns="2" columnClasses="2">
+                    <h:outputText value="Nombre" />
+                    <h:outputText value="#{farmaciaControlador.pacienteActual.medico.nombre}" />           
+                    
+                </h:panelGrid>
             </ui:define>
 
         </ui:composition>
