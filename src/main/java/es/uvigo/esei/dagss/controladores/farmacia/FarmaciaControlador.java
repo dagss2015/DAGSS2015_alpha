@@ -5,11 +5,17 @@ package es.uvigo.esei.dagss.controladores.farmacia;
 
 import es.uvigo.esei.dagss.controladores.autenticacion.AutenticacionControlador;
 import es.uvigo.esei.dagss.dominio.daos.FarmaciaDAO;
+import es.uvigo.esei.dagss.dominio.daos.MedicamentoDAO;
 import es.uvigo.esei.dagss.dominio.daos.MedicoDAO;
 import es.uvigo.esei.dagss.dominio.daos.PacienteDAO;
+import es.uvigo.esei.dagss.dominio.daos.PrescripcionDAO;
+import es.uvigo.esei.dagss.dominio.daos.RecetaDAO;
 import es.uvigo.esei.dagss.dominio.daos.TratamientoDAO;
+import es.uvigo.esei.dagss.dominio.entidades.EstadoReceta;
 import es.uvigo.esei.dagss.dominio.entidades.Farmacia;
 import es.uvigo.esei.dagss.dominio.entidades.Paciente;
+import es.uvigo.esei.dagss.dominio.entidades.Prescripcion;
+import es.uvigo.esei.dagss.dominio.entidades.Receta;
 import es.uvigo.esei.dagss.dominio.entidades.TipoUsuario;
 import es.uvigo.esei.dagss.dominio.entidades.Tratamiento;
 import javax.inject.Named;
@@ -18,11 +24,13 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 /**
  *
@@ -38,6 +46,25 @@ public class FarmaciaControlador implements Serializable {
     
     private Paciente pacienteActual;
     private String numeroPaciente;
+    List<Receta> recetasDePaciente;
+
+    public List<Receta> getRecetasDePaciente() {
+        return recetasDePaciente;
+    }
+
+    public void setRecetasDePaciente(List<Receta> recetasDePaciente) {
+        this.recetasDePaciente = recetasDePaciente;
+    }
+    private Receta recetaActual;            
+
+    public Receta getRecetaActual() {
+        return recetaActual;
+    }
+
+    public void setRecetaActual(Receta recetaActual) {
+        this.recetaActual = recetaActual;
+    }
+
 
     public String getNumeroPaciente() {
         return numeroPaciente;
@@ -54,7 +81,11 @@ public class FarmaciaControlador implements Serializable {
     public void setPacienteActual(Paciente pacienteActual) {
         this.pacienteActual = pacienteActual;
     }
-    
+    public void doPagarReceta(Receta r) {
+        r.setEstado(EstadoReceta.SERVIDA);
+        recetaDAO.actualizar(r);
+        this.recetasDePaciente = this.recetaDAO.buscarPorPaciente(this.pacienteActual.getNumeroTarjetaSanitaria());
+    }
 
     @Inject
     private AutenticacionControlador autenticacionControlador;
@@ -68,8 +99,18 @@ public class FarmaciaControlador implements Serializable {
     @EJB
     private TratamientoDAO tratamientoDAO;
 
+    
+    @EJB
+    private PrescripcionDAO prescripcionDAO;
+    
     @EJB
     private MedicoDAO medicoDAO;
+    
+    @EJB
+    private MedicamentoDAO medicamentoDAO;
+     
+    @EJB
+    private RecetaDAO recetaDAO;
     
     
     
@@ -142,18 +183,29 @@ public class FarmaciaControlador implements Serializable {
        if (p == null) {
            return "";
        }
+       
        Calendar dateIni = new GregorianCalendar();
-       dateIni.set(2015, 12, 5);
+       dateIni.set(2015, 10, 5);
        
        Calendar dateFin = new GregorianCalendar();
        dateFin.set(2016, 11, 15);
        
        this.setPacienteActual(p);
     
-       //ToDo
+       //ToDo THIS IS SHIT REMOVE 
        this.tratamientoDAO.crear(new Tratamiento(pacienteActual,
                medicoDAO.buscarPorDNI("11111111A"), "esto es a machete", 
                dateIni.getTime(), dateFin.getTime()));
+       
+       Prescripcion pre = this.prescripcionDAO.crear(
+               new Prescripcion("consumir moderadamente",
+                       tratamientoDAO.buscarPorId(7L), 
+                       medicamentoDAO.buscarPorId(1L),2));
+       this.recetaDAO.crear( new Receta(pre, 10, dateIni.getTime(), dateFin.getTime(), EstadoReceta.GENERADA));
+       // END SHIT
+       List<Receta> recetas = this.recetaDAO.buscarPorPaciente(p.getNumeroTarjetaSanitaria());
+       this.recetasDePaciente = recetas;
+       
        return "ver_paciente";
     }
     

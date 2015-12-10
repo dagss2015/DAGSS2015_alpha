@@ -1,8 +1,10 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
 
@@ -43,6 +45,61 @@
                     <h:outputText value="#{farmaciaControlador.pacienteActual.medico.nombre}" />           
                     
                 </h:panelGrid>
+                
+                
+                
+
+            <p:growl id="mensajes" life="3000" />
+
+            <h:form id="formularioListado">     
+                <p:panel>
+                    <p:dataTable id="tablaListado"
+                                 value="#{farmaciaControlador.recetasDePaciente}"
+                                 var="receta" 
+                                 selection="#{farmaciaControlador.recetaActual}"
+                                 selectionMode="single"
+                                 paginator="true" paginatorPosition="bottom" rows="10" rowKey="#{receta.id}">
+
+                        <p:ajax event="rowSelect"   />
+
+                        <f:facet name="header">
+                            <h:outputText value="Listado de recetas"/>
+                        </f:facet>                        
+
+                        <p:column headerText="Id">
+                            <p:outputLabel value="#{receta.id}"/>
+                        </p:column>
+
+                        <p:column headerText="Estado">
+                            <p:outputLabel value="#{receta.estado}" />
+                        </p:column>                    
+
+                        <p:column headerText="Inicio">
+                            <p:outputLabel value="#{receta.inicioValidez}" />
+                        </p:column>                    
+
+                        <p:column headerText="Fin">
+                            <p:outputLabel value="#{receta.finValidez}" />
+                        </p:column>
+                        <p:column >
+                            <h:commandButton value="Pagar" action="#{farmaciaControlador.doPagarReceta(receta)}" rendered="#{receta.estado != 'SERVIDA'}"/>
+                        </p:column>
+                        
+
+                    </p:dataTable>
+                </p:panel>
+            </h:form>         
+
+
+    
+
+
+                
+                
+                
+                
+                
+                
             </ui:define>
 
         </ui:composition>
