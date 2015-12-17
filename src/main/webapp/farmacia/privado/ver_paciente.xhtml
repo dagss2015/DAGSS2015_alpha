@@ -36,18 +36,10 @@
                     <h:outputText value="Email" />
                     <h:outputText value="#{farmaciaControlador.pacienteActual.email}" />
                     <h:outputText value="Medico" />
-                    <h:outputText value="#{farmaciaControlador.pacienteActual.medico.nombre}" />
+                    <h:outputText value="#{farmaciaControlador.pacienteActual.medico.nombre}  #{farmaciaControlador.pacienteActual.medico.apellidos}" />
+                    <h:outputText value="Numero colegiado" />
+                    <h:outputText value="#{farmaciaControlador.pacienteActual.medico.numeroColegiado}" />
                 </h:panelGrid>
-
-
-                <h:panelGrid columns="2" columnClasses="2">
-                    <h:outputText value="Nombre" />
-                    <h:outputText value="#{farmaciaControlador.pacienteActual.medico.nombre}" />           
-                    
-                </h:panelGrid>
-                
-                
-                
 
             <p:growl id="mensajes" life="3000" />
 
@@ -66,8 +58,8 @@
                             <h:outputText value="Listado de recetas"/>
                         </f:facet>                        
 
-                        <p:column headerText="Id">
-                            <p:outputLabel value="#{receta.id}"/>
+                        <p:column headerText="Medicina">
+                            <p:outputLabel value="#{receta.prescripcion.medicamento.nombre}"/>
                         </p:column>
 
                         <p:column headerText="Estado">
@@ -75,14 +67,14 @@
                         </p:column>                    
 
                         <p:column headerText="Inicio">
-                            <p:outputLabel value="#{receta.inicioValidez}" />
+                            <p:outputLabel value="#{receta.prescripcion.tratamiento.fechaInicio}" />
                         </p:column>                    
 
                         <p:column headerText="Fin">
-                            <p:outputLabel value="#{receta.finValidez}" />
+                            <p:outputLabel value="#{receta.prescripcion.tratamiento.fechaFin}" />
                         </p:column>
                         <p:column >
-                            <h:commandButton value="Pagar" action="#{farmaciaControlador.doPagarReceta(receta)}" rendered="#{receta.estado != 'SERVIDA'}"/>
+                            <h:commandButton value="Suministrar" action="#{farmaciaControlador.doPagarReceta(receta)}" rendered="#{receta.estado != 'SERVIDA'}"/>
                         </p:column>
                         
 

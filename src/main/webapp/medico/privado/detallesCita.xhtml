@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="/plantillas/plantillaGlobal.xhtml">
+
+            <ui:define name="tituloPagina">
+                Informacion de la cita
+            </ui:define>            
+            <ui:define name="izquierda">
+                <ui:include src="/medico/plantillas/menuMedico.xhtml"/>
+            </ui:define>
+
+            <ui:define name="contenido">
+
+                <h:panelGrid columns="2" columnClasses="2">
+                    <h:outputText value="ID" />
+                    <h:outputText value="#{medicoControlador.citaActual.estado}" />
+                </h:panelGrid>
+
+
+
+                
+                
+                 <h:form>
+                    
+                    <h:outputLabel value="Medicamento "/>
+                    <h:inputText id ="medicamento" value="#{medicamentoControlador.medicamentoABuscar}" required="true"/>
+                    <h:message for="medicamento"/>
+                    
+                    <h:commandButton  value="Buscar" action="#{medicoControlador.doBuscarMedicamento}" />
+                </h:form>
+                
+                <h:form id="formularioListado">     
+                    <p:panel>
+
+                        <p:dataTable id="tablaListado"
+                                     value="#{medicoControlador.medicamentos}"
+                                     var="medicamento" 
+                                     selection="#{medicoControlador.medicamentoActual}"
+                                     selectionMode="single"
+                                     paginator="true" paginatorPosition="bottom" rows="10" rowKey="#{prescripcion.id}">
+
+                            <p:ajax event="rowSelect"   />
+
+                            <f:facet name="header">
+                                <h:outputText value="Listado de medicamentos"/>
+                            </f:facet>   
+                           
+                        </p:dataTable>
+                    </p:panel>
+                </h:form>  
+                
+                
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

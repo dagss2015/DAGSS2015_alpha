@@ -21,6 +21,7 @@ import es.uvigo.esei.dagss.dominio.entidades.Tratamiento;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -204,12 +205,24 @@ public class FarmaciaControlador implements Serializable {
        this.recetaDAO.crear( new Receta(pre, 10, dateIni.getTime(), dateFin.getTime(), EstadoReceta.GENERADA));
        // END SHIT
        List<Receta> recetas = this.recetaDAO.buscarPorPaciente(p.getNumeroTarjetaSanitaria());
-       this.recetasDePaciente = recetas;
+       
+       this.recetasDePaciente = this.filtrarRecetasValidas(recetas,new GregorianCalendar().getTime());
        
        return "ver_paciente";
     }
     
     public String doCancelarBuscarPaciente() {
         return "";
+    }
+    
+    // It works but we are not sure what to send to the view.
+    private List<Receta> filtrarRecetasValidas(List<Receta> lst, Date date) {
+        List<Receta> filtered = new ArrayList<>();
+        for(Receta r : lst) {
+            if (r.getPrescripcion().getTratamiento().getFechaFin().after(date)) {
+               filtered.add(r);
+            }
+        }
+        return filtered;
     }
 }
