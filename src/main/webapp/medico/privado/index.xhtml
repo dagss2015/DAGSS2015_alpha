@@ -62,7 +62,7 @@
                         </p:column>
                         
                          <p:column >
-                             <h:commandButton value="Atender" action="#{medicoControlador.doShowCita(cita)}" rendered="#{cita.estado == 'PLANIFICADA'}"/>
+                             <p:commandButton  ajax="false" value="Atender" action="#{medicoControlador.doShowCita(cita)}" rendered="#{cita.estado == 'PLANIFICADA'}"/>
                         </p:column>
     
                     </p:dataTable>
