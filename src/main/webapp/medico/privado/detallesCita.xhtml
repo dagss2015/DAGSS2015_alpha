@@ -15,29 +15,46 @@
             </ui:define>            
             <ui:define name="izquierda">
                 <ui:include src="/medico/plantillas/menuMedico.xhtml"/>
+
+
             </ui:define>
 
             <ui:define name="contenido">
 
-                <h:panelGrid columns="2" columnClasses="2">
-                    <p:outputLabel value="ID" />
-                    <p:outputLabel value="#{medicoControlador.citaActual.estado}" />
-                </h:panelGrid>
+                <h:form>
+                    <h:panelGrid columns="2" columnClasses="2">
+                        <p:outputLabel value="Cita del Paciente: " />
+                        <p:outputLabel value="#{medicoControlador.citaActual.paciente.nombre} #{medicoControlador.citaActual.paciente.apellidos}" />
+
+                        <p:outputLabel value="DNI del Paciente: " />
+                        <p:outputLabel value="#{medicoControlador.citaActual.paciente.dni}" />
+
+                        <p:outputLabel value="Numero Tarjeta Sanitaria del Paciente: " />
+                        <p:outputLabel value="#{medicoControlador.citaActual.paciente.numeroTarjetaSanitaria}" />
+
+                        <p:outputLabel value="Estado actual de la cita: " />
+                        <p:outputLabel value="#{medicoControlador.citaActual.estado}" />
+                        
+                        <p:commandButton  ajax="false" value="Realizada" action="#{medicoControlador.doCambiarEstadoCita(EstadoCita.COMPLETADA)}" />
+                        <p:commandButton  ajax="false" value="No Presentado" action="#{medicoControlador.doCambiarEstadoCita(EstadoCita.AUSENTE)}" />
+                    </h:panelGrid>
+                </h:form>
+
 
                 <p:separator />
                 <br></br>
-                
-                 <h:form id="formularioListadoTratamientos">     
+
+                <h:form id="formularioListadoTratamiento">     
                     <p:panel>
 
-                        <p:dataTable id="tablaListadoTratamientos"
+                        <p:dataTable id="tablaListadoTratamiento"
                                      value="#{medicoControlador.listaDeTratamientos}"
                                      var="tratamiento" 
                                      selectionMode="single"
+                                     selection="#{medicoControlador.tratamientoActual}"
                                      paginator="true" paginatorPosition="bottom" rows="10" rowKey="#{tratamiento.id}">
 
-                            <p:ajax event="rowSelect"   />
-
+                            <p:ajax event="rowSelect"   update="botonEditar"/>
                             <f:facet name="header">
                                 <h:outputText value="Listado de tratamientos"/>
                             </f:facet>   
@@ -49,24 +66,24 @@
                             <p:column headerText="Fecha inicio">
                                 <p:outputLabel value="#{tratamiento.fechaInicio}"/>
                             </p:column>
-                            
-                             <p:column headerText="Fecha inicio">
+
+                            <p:column headerText="Fecha inicio">
                                 <p:outputLabel value="#{tratamiento.fechaFin}"/>
                             </p:column>
 
                             <p:column>
                                 <p:commandButton ajax="false" value="Eliminar" action="#{medicoControlador.doEliminarTratamiento(tratamiento)}" />
                             </p:column>
-                            <p:column>
-                                <p:commandButton  ajax="false" value="Editar" action="#{medicoControlador.doEditarTratamiento(tratamiento)}" />
-                            </p:column>
+                            <f:facet name="footer">
+                                <p:commandButton id="botonEditar" icon="ui-icon-pencil" value="Editar" update=":formularioEditar" oncomplete="PF('DialogoEditar').show()" disabled="#{empty medicoControlador.tratamientoActual}"/>
+                            </f:facet>
                         </p:dataTable>
                     </p:panel>
                 </h:form>  
-                
+
                 <p:separator />
                 <br></br>
-                
+
                 <h:form>
 
                     <p:outputLabel value="Medicamento "/>
@@ -75,13 +92,13 @@
 
                     <p:commandButton ajax="false" value="Buscar" action="#{medicoControlador.doBuscarMedicamento()}" />
                 </h:form>
-                
+
                 <p:separator />
                 <br></br>
-                
+
                 <h:form id="formularioListado">     
                     <p:panel>
-
+                        <p:growl id="mensajes" life="3000" />
                         <p:dataTable id="tablaListado"
                                      value="#{medicoControlador.listaDeMedicamentos}"
                                      var="medicamento" 
@@ -113,17 +130,18 @@
                             <p:column>
                                 <p:commandButton  ajax="false" value="Seleccionar" action="#{medicoControlador.doShowFormularioTratamiento(medicamento)}" />
                             </p:column>
+
                         </p:dataTable>
                     </p:panel>
                 </h:form>  
-                
+
                 <p:separator />
                 <br></br>
-                
+
                 <h:form rendered="#{medicoControlador.medicamentoSeleccionado != null}">
                     <h:panelGrid>
                         <p:outputLabel for="fechaInicio" value="Fecha inicio" />
-                        
+
                         <p:calendar id="fechaInicio" value="#{medicoControlador.fechaInicio}" showOn="button" pattern="MM/dd/yyyy">
                             <f:convertDateTime pattern="MM/dd/yyyy"/>
                         </p:calendar>
@@ -133,23 +151,23 @@
                             <f:convertDateTime pattern="MM/dd/yyyy"/>
                         </p:calendar>
 
-                      
+
 
                         <p:outputLabel value="Dosis"/>
                         <p:inputText id ="dosis" value="#{medicoControlador.dosis}" required="true"/>
                         <p:message for="dosis"/>
-                        
+
                         <p:outputLabel value="Comentario"/>
-                        <p:inputTextarea id ="comentario" completeMethod="#{medicoControlador.saveComentario}"/>
+                        <p:inputText id ="comentario" value="#{medicoControlador.comentario}" />
                         <p:message for="comentario"/>
-                        
+
                         <p:commandButton  value="Crear tratamiento" action="#{medicoControlador.doCrearTratamiento()}" ajax="false" />
                     </h:panelGrid>
 
-                </h:form>
 
+                </h:form>
+                <ui:include src="fragmentoDialogoEditar.xhtml"/>
             </ui:define>
         </ui:composition>
-
     </body>
 </html>

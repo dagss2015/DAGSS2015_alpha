@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition>
+        <p:dialog id="dialogoEditar" widgetVar="DialogoEditar" modal="true" resizable="false" appendTo="@(body)" header="Editar Tratamiento">
+            <h:form id="formularioEditar">
+                <h:panelGroup id="display">
+                    <h:panelGrid columns="2" rendered="#{medicoControlador.tratamientoActual != null}">
+                        <p:outputLabel for="fechaInicio" value="Fecha inicio" />
+
+                        <p:calendar id="fechaInicio" value="#{medicoControlador.tratamientoActual.fechaInicio}" showOn="button" pattern="MM/dd/yyyy">
+                            <f:convertDateTime pattern="MM/dd/yyyy"/>
+                        </p:calendar>
+
+                        <p:outputLabel for="fechaFin" value="Fecha Fin" />
+                        <p:calendar id="fechaFin" value="#{medicoControlador.tratamientoActual.fechaFin}" showOn="button" pattern="MM/dd/yyyy">
+                            <f:convertDateTime pattern="MM/dd/yyyy"/>
+                        </p:calendar>
+
+                        <p:outputLabel value="Dosis"/>
+                        <p:inputText id ="dosis" value="#{medicoControlador.tratamientoActual.prescipciones.get(0).dosis}" required="true"/>
+                        <p:message for="dosis"/>
+
+                        <p:outputLabel value="Comentario"/>
+                        <p:inputText id ="comentario" value="#{medicoControlador.tratamientoActual.prescipciones.get(0).indicaciones}" />
+                        <p:message for="comentario"/>
+                    </h:panelGrid>
+
+                    <p:commandButton value="Guardar" actionListener="#{medicoControlador.doGuardarEditado()}"  
+                                     update="display,:formularioListadoTratamiento:tablaListadoTratamiento" 
+                                     oncomplete="PF('DialogoEditar').hide()"/>
+                    <p:commandButton value="Cancelar" onclick="PF('DialogoEditar').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>
+

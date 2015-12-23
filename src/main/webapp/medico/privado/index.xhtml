@@ -46,10 +46,14 @@
                         </f:facet>                        
 
                         <p:column headerText="Fecha">
-                            <p:outputLabel value="#{cita.fecha}"/>
+                            <p:outputLabel value="#{cita.fecha}">
+                            <f:convertDateTime pattern="MM/dd/yyyy"/>
+                            </p:outputLabel>
                         </p:column>
                         <p:column headerText="Hora">
-                            <p:outputLabel value="#{cita.hora}"/>
+                            <p:outputLabel value="#{cita.hora}">
+                                <f:convertDateTime pattern="hh:mm:ss"/>
+                            </p:outputLabel>
                         </p:column>
                         <p:column headerText="Duracion">
                              <p:outputLabel value="#{cita.duracion}"/>
@@ -62,7 +66,7 @@
                         </p:column>
                         
                          <p:column >
-                             <p:commandButton  ajax="false" value="Atender" action="#{medicoControlador.doShowCita(cita)}" rendered="#{cita.estado == 'PLANIFICADA'}"/>
+                             <p:commandButton  ajax="false" value="Atender" action="#{medicoControlador.doShowCita(cita)}" />
                         </p:column>
     
                     </p:dataTable>

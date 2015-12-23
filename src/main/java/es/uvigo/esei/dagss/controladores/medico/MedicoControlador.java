@@ -10,6 +10,7 @@ import es.uvigo.esei.dagss.dominio.daos.MedicamentoDAO;
 import es.uvigo.esei.dagss.dominio.daos.MedicoDAO;
 import es.uvigo.esei.dagss.dominio.daos.TratamientoDAO;
 import es.uvigo.esei.dagss.dominio.entidades.Cita;
+import es.uvigo.esei.dagss.dominio.entidades.EstadoCita;
 import es.uvigo.esei.dagss.dominio.entidades.Medicamento;
 import es.uvigo.esei.dagss.dominio.entidades.Medico;
 import es.uvigo.esei.dagss.dominio.entidades.Paciente;
@@ -75,7 +76,8 @@ public class MedicoControlador implements Serializable {
     List<Tratamiento> listaDeTratamientos;
     Prescripcion prescripcionActual;
     Tratamiento tratamientoActual;
-
+    
+   
     
     
     Date fechaInicio;
@@ -108,11 +110,23 @@ public class MedicoControlador implements Serializable {
     String medicamentoABuscar;
     Medicamento medicamentoSeleccionado;
     
+    public String doCambiarEstadoCita(EstadoCita estado) {
+        this.citaActual.setEstado(estado);
+        this.citaDAO.actualizar(this.citaActual);
+        return "";
+    } 
     public String doEliminarTratamiento(Tratamiento t) {
         this.tratamientoDAO.eliminar(t);
         this.actualizarTratamientos();
         return "";
     }
+    
+    public String doGuardarEditado() {
+        this.tratamientoDAO.actualizar(this.tratamientoActual);
+        this.actualizarTratamientos();
+        return "";
+    }
+    
     public String doCrearTratamiento() {
         this.tratamientoActual = new Tratamiento(
                 this.citaActual.getPaciente(),
@@ -309,5 +323,10 @@ public class MedicoControlador implements Serializable {
     
     private void actualizarTratamientos() {
         this.listaDeTratamientos = this.tratamientoDAO.buscarTodos();
+        this.medicamentoABuscar = "";
+        this.listaDeMedicamentos = null;
+        this.medicamentoSeleccionado = null;
+        this.tratamientoActual = null;
+        this.prescripcionActual = null;
     }
 }
