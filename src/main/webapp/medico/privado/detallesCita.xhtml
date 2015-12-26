@@ -35,8 +35,8 @@
                         <p:outputLabel value="Estado actual de la cita: " />
                         <p:outputLabel value="#{medicoControlador.citaActual.estado}" />
                         
-                        <p:commandButton  ajax="false" value="Realizada" action="#{medicoControlador.doCambiarEstadoCita(EstadoCita.COMPLETADA)}" />
-                        <p:commandButton  ajax="false" value="No Presentado" action="#{medicoControlador.doCambiarEstadoCita(EstadoCita.AUSENTE)}" />
+                        <p:commandButton  ajax="false" value="Realizada" action="#{medicoControlador.doCambiarEstadoCitaCompletada()}" />
+                        <p:commandButton  ajax="false" value="No Presentado" action="#{medicoControlador.doCambiarEstadoCitaAusente()}" />
                     </h:panelGrid>
                 </h:form>
 
@@ -64,11 +64,15 @@
                             </p:column>
 
                             <p:column headerText="Fecha inicio">
-                                <p:outputLabel value="#{tratamiento.fechaInicio}"/>
+                                <p:outputLabel value="#{tratamiento.fechaInicio}">
+                                    <f:convertDateTime pattern="MM/dd/yyyy"/>
+                                </p:outputLabel>
                             </p:column>
 
                             <p:column headerText="Fecha inicio">
-                                <p:outputLabel value="#{tratamiento.fechaFin}"/>
+                                <p:outputLabel value="#{tratamiento.fechaFin}">
+                                    <f:convertDateTime pattern="MM/dd/yyyy"/>
+                                </p:outputLabel>
                             </p:column>
 
                             <p:column>

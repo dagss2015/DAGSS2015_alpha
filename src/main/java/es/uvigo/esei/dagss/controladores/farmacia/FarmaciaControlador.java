@@ -192,18 +192,7 @@ public class FarmaciaControlador implements Serializable {
        dateFin.set(2016, 11, 15);
        
        this.setPacienteActual(p);
-    
-       //ToDo THIS IS SHIT REMOVE 
-       this.tratamientoDAO.crear(new Tratamiento(pacienteActual,
-               medicoDAO.buscarPorDNI("11111111A"), "esto es a machete", 
-               dateIni.getTime(), dateFin.getTime()));
-       
-       Prescripcion pre = this.prescripcionDAO.crear(
-               new Prescripcion("consumir moderadamente",
-                       tratamientoDAO.buscarPorId(7L), 
-                       medicamentoDAO.buscarPorId(1L),2));
-       this.recetaDAO.crear( new Receta(pre, 10, dateIni.getTime(), dateFin.getTime(), EstadoReceta.GENERADA));
-       // END SHIT
+   
        List<Receta> recetas = this.recetaDAO.buscarPorPaciente(p.getNumeroTarjetaSanitaria());
        
        this.recetasDePaciente = this.filtrarRecetasValidas(recetas,new GregorianCalendar().getTime());

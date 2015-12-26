@@ -4,6 +4,7 @@
 package es.uvigo.esei.dagss.controladores.medico;
 
 import es.uvigo.esei.dagss.controladores.autenticacion.AutenticacionControlador;
+import es.uvigo.esei.dagss.controladores.tratamiento.TratamientoControlador;
 import es.uvigo.esei.dagss.dominio.daos.CitaDAO;
 import es.uvigo.esei.dagss.dominio.daos.FarmaciaDAO;
 import es.uvigo.esei.dagss.dominio.daos.MedicamentoDAO;
@@ -110,9 +111,14 @@ public class MedicoControlador implements Serializable {
     String medicamentoABuscar;
     Medicamento medicamentoSeleccionado;
     
-    public String doCambiarEstadoCita(EstadoCita estado) {
-        this.citaActual.setEstado(estado);
-        this.citaDAO.actualizar(this.citaActual);
+    public String doCambiarEstadoCitaCompletada() {
+        this.citaActual.setEstado(EstadoCita.COMPLETADA);
+        this.citaActual = this.citaDAO.actualizar(citaActual);
+        return "";
+    } 
+    public String doCambiarEstadoCitaAusente() {
+        this.citaActual.setEstado(EstadoCita.AUSENTE);
+        this.citaActual = this.citaDAO.actualizar(citaActual);
         return "";
     } 
     public String doEliminarTratamiento(Tratamiento t) {
@@ -145,7 +151,8 @@ public class MedicoControlador implements Serializable {
         
         this.prescripcionActual.setTratamiento(this.tratamientoActual);
         
-        this.tratamientoDAO.crear(this.tratamientoActual);
+        //this.tratamientoDAO.crear(this.tratamientoActual);
+        this.tratamientoControlador.procesar(this.tratamientoActual);
         
         this.actualizarTratamientos();
         
@@ -237,7 +244,12 @@ public class MedicoControlador implements Serializable {
     private MedicamentoDAO medicamentoDAO;
     @EJB
     private CitaDAO citaDAO;
-    @EJB TratamientoDAO tratamientoDAO;
+    
+    @EJB
+    TratamientoDAO tratamientoDAO;
+    
+    @Inject
+    private TratamientoControlador tratamientoControlador;
 
     /**
      * Creates a new instance of AdministradorControlador
