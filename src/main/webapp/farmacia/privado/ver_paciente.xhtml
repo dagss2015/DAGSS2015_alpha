@@ -57,7 +57,10 @@
                         <f:facet name="header">
                             <h:outputText value="Listado de recetas"/>
                         </f:facet>                        
-
+                        
+                        <p:column headerText="Médico">
+                            <p:outputLabel value="#{receta.prescripcion.tratamiento.medico.nombre} #{receta.prescripcion.tratamiento.medico.apellidos} "/>
+                        </p:column>
                         <p:column headerText="Medicina">
                             <p:outputLabel value="#{receta.prescripcion.medicamento.nombre}"/>
                         </p:column>
@@ -66,18 +69,20 @@
                             <p:outputLabel value="#{receta.estado}" />
                         </p:column>                    
 
-                        <p:column headerText="Inicio">
-                            <p:outputLabel value="#{receta.prescripcion.tratamiento.fechaInicio}" />
+                        <p:column headerText="Válido desde">
+                            <p:outputLabel value="#{receta.prescripcion.tratamiento.fechaInicio}">
+                                <f:convertDateTime pattern="MM/dd/yyyy"/>
+                            </p:outputLabel>
                         </p:column>                    
 
-                        <p:column headerText="Fin">
-                            <p:outputLabel value="#{receta.prescripcion.tratamiento.fechaFin}" />
+                        <p:column headerText="Válido hasta">
+                            <p:outputLabel value="#{receta.prescripcion.tratamiento.fechaFin}">
+                                <f:convertDateTime pattern="MM/dd/yyyy"/>
+                            </p:outputLabel>
                         </p:column>
                         <p:column >
                             <h:commandButton value="Suministrar" action="#{farmaciaControlador.doPagarReceta(receta)}" rendered="#{receta.estado != 'SERVIDA'}"/>
                         </p:column>
-                        
-
                     </p:dataTable>
                 </p:panel>
             </h:form>         
